@@ -72,7 +72,7 @@ local function onShareButtonReleased( event )
 		end
 
 		-- Show the popup
-		native:showPopup( popupName,
+		native.showPopup( popupName,
 		{
 			service = serviceName,
 			message = "I saved the planet using the Corona SDK!",

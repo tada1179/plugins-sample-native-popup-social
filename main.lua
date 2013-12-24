@@ -58,20 +58,25 @@ widget.setTheme( "widget_theme_ios7" )
 local popupName = "social"
 
 -- Display a background
-local background = display.newImage( "world.jpg", true )
+local background = display.newImage( "world.jpg", display.contentCenterX, display.contentCenterY, true )
 
 -- Display some text
-local achivementText = display.newText( "You saved the planet!\n\nTouch any of the buttons below to share your victory with your friends!", 12, 10, display.contentWidth - 20, 0, native.systemFontBold, 18 )
+local achivementText = display.newText
+{
+	text = "You saved the planet!\n\nTouch any of the buttons below to share your victory with your friends!",
+	x = display.contentCenterX,
+	y = 60,
+	width = display.contentWidth - 20,
+	height = 0,
+	font = native.systemFontBold,
+	fontSize = 18,
+	align = "center",
+}
 
 -- Exectuted upon touching & releasing a widget button
 local function onShareButtonReleased( event )
 	local serviceName = event.target.id
 	local isAvailable = native.canShowPopup( popupName, serviceName )
-
-	-- For demonstration purposes, we set isAvailable to true here for Android.
-	if "Android" == system.getInfo( "platformName" ) then
-		isAvailable = true
-	end
 
 	-- If it is possible to show the popup
 	if isAvailable then
@@ -88,7 +93,7 @@ local function onShareButtonReleased( event )
 			listener = listener,
 			image = 
 			{
-				{ filename = "world.jpg", baseDir = system.ResourceDirectory },
+				{ filename = "Icon.png", baseDir = system.ResourceDirectory },
 			},
 			url = 
 			{ 
@@ -105,11 +110,11 @@ local function onShareButtonReleased( event )
 	end
 end
 
+
 -- Create buttons to show the popup (per platform)
 if "Android" == system.getInfo( "platformName" ) then
 	-- Create a background to go behind our widget buttons
-	local buttonBackground = display.newRect( 0, 410, 220, 200 )
-	buttonBackground.x = display.contentCenterX
+	local buttonBackground = display.newRect( display.contentCenterX, display.contentHeight - 25, 220, 50 )
 	buttonBackground:setFillColor( 0 )
 
 	-- Create a share button
@@ -117,7 +122,7 @@ if "Android" == system.getInfo( "platformName" ) then
 	{
 		id = "share",
 		left = 0,
-		top = 420,
+		top = 430,
 		width = 240,
 		label = "Show Share Popup",
 		onRelease = onShareButtonReleased,
@@ -125,8 +130,7 @@ if "Android" == system.getInfo( "platformName" ) then
 	shareButton.x = display.contentCenterX
 else
 	-- Create a background to go behind our widget buttons
-	local buttonBackground = display.newRect( 0, 330, 220, 200 )
-	buttonBackground.x = display.contentCenterX
+	local buttonBackground = display.newRect( display.contentCenterX, 380, 220, 200 )
 	buttonBackground:setFillColor( 0 )
 
 	-- Create a facebook button
@@ -134,7 +138,7 @@ else
 	{
 		id = "facebook",
 		left = 0,
-		top = 340,
+		top = 280,
 		width = 240,
 		label = "Share On Facebook",
 		onRelease = onShareButtonReleased,
@@ -146,7 +150,7 @@ else
 	{
 		id = "twitter",
 		left = 0,
-		top = 380,
+		top = facebookButton.y + facebookButton.contentHeight * 0.5,
 		width = 240,
 		label = "Share On Twitter",
 		onRelease = onShareButtonReleased,
@@ -158,10 +162,22 @@ else
 	{
 		id = "sinaWeibo",
 		left = 0,
-		top = 420,
+		top = twitterButton.y + twitterButton.contentHeight * 0.5,
 		width = 240,
 		label = "Share On SinaWeibo",
 		onRelease = onShareButtonReleased,
 	}
 	sinaWeiboButton.x = display.contentCenterX
+
+	-- Create a tencentWeibo button
+	local tencentWeiboButton = widget.newButton
+	{
+		id = "tencentWeibo",
+		left = 0,
+		top = sinaWeiboButton.y + sinaWeiboButton.contentHeight * 0.5,
+		width = 240,
+		label = "Share On TencentWeibo",
+		onRelease = onShareButtonReleased,
+	}
+	tencentWeiboButton.x = display.contentCenterX
 end
